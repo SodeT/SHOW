@@ -1,14 +1,14 @@
-#include <iostream>
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
-#include <thread>
+#include <iostream> // cout
+#include <string> // string parsing
+#include <thread> // multithreading
+#include <stdio.h> // printf
+#include <stdlib.h> // fopen
+#include <memory> // smart ptr
 
-void ReadInputFile(std::string InputFilePath, File* InputFile);
+void ReadFile(std::string InputFilePath, FILE* InputFile, std::string* FileBuffer);
 
 int main(int Argc, char* Argv[])
 {
-
     if (Argc < 3)
     {
         printf("Error, incorrect arguments: \"<input.txt> <output.odt>\"...\n");
@@ -18,7 +18,9 @@ int main(int Argc, char* Argv[])
     std::string LanguageFilePath;
     std::string InputFilePath;
     std::string OutputFilePath;
-    File* InputFile;
+    std::string InputText;
+    std::shared_ptr<FILE> InputFile = std::make_shared<FILE>();
+
 
     InputFilePath = Argv[1];
     OutputFilePath = Argv[2];
@@ -31,31 +33,29 @@ int main(int Argc, char* Argv[])
         LanguageFilePath = "English/";
     }
 
-    ReadInputFile(InputFilePath, InputFile);
-    printf(InputFile);
+    // InputText gets address out of bounds
+    // Error most prob in fread but not sure.
+    // Use GDB to find what line it gets out of bounds 
+    ReadFile(InputFilePath, InputFile.get(), &InputText); 
+    printf("Hello World! 1\n");
+    printf(InputText.c_str());
+    
     return 0;
 }
 
-void ReadInputFile(std::string InputFilePath, File* InputFile)
+void ReadFile(std::string InputFilePath, FILE* InputFile, std::string* FileBuffer)
 {
-    
     try
     {
-        
-        if ((InputFile = fopen(InputFilePath, "r")) != NULL) // port to f open from c++ bloat
-        {
-            printf("Error, could not open file...\n");
-            exit(1);
-        }
+        InputFile = fopen(InputFilePath.c_str(), "r");
 
-        InputFileStream.seekg(0, InputFileStream.end);
-        int FileLength = InputFileStream.tellg();
-        char* Buffer = new char[FileLength];
-        InputFileStream.seekg(0, InputFileStream.beg);
-        
-        InputFileStream.read(Buffer, FileLength);
-        InputFile = Buffer;
-        delete[] Buffer;
+        fseek(InputFile, 0, SEEK_END);
+        int FileSize = ftell(InputFile);
+        FileBuffer->reserve(FileSize);
+        fseek(InputFile, 0, SEEK_SET);
+
+        int ret = fread(FileBuffer, FileSize + 1, 1, InputFile);
+
     }
     catch (int ExitCode)
     {
@@ -63,5 +63,4 @@ void ReadInputFile(std::string InputFilePath, File* InputFile)
         exit(1);
     }
     return;
-
 }
