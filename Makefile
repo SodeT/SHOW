@@ -1,6 +1,6 @@
 CXX = g++
 CFLAGS = -g
-LDFLAGS = -I headers/
+LDFLAGS = #-I headers/
 
 OBJS = $(wildcard obj/*.o)
 SRCS = $(wildcard src/*.cpp)
@@ -10,6 +10,9 @@ link: $(OBJS)
 	@echo === Link ===
 	$(CXX) $^ $(CFLAGS) $(LDFLAGS) -o bin/main.exe
 
-obj/main.o: $(SRCS) $(HEDS)
+compile: $(SRCS) $(HEDS)
 	@echo === Compile ===
-	$(CXX) $^ $(CFLAGS) $(LDFLAGS) -c -o $@
+	$(foreach, target, $(SRCS), $(CXX) $(target) $(CFLAGS) $(LDFLAGS) -c -o $(addprefix obj/, $(addsuffix .o, $(basename $(target)))))
+
+dont:	
+	$(CXX) $(target) $(CFLAGS) $(LDFLAGS) -c -o $(addprefix obj/, $(addsuffix .o, $(basename $(target))))

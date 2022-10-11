@@ -5,7 +5,7 @@
 #include <stdlib.h> // fopen
 #include <memory> // smart ptr
 
-void ReadFile(std::string InputFilePath, FILE* InputFile, std::string* FileBuffer);
+#include <readfile.hpp>
 
 int main(int Argc, char* Argv[])
 {
@@ -36,31 +36,9 @@ int main(int Argc, char* Argv[])
     // InputText gets address out of bounds
     // Error most prob in fread but not sure.
     // Use GDB to find what line it gets out of bounds 
-    ReadFile(InputFilePath, InputFile.get(), &InputText); 
+    InputText = *ReadFile(InputFilePath, InputFile.get()); 
     printf("Hello World! 1\n");
     printf(InputText.c_str());
     
     return 0;
-}
-
-void ReadFile(std::string InputFilePath, FILE* InputFile, std::string* FileBuffer)
-{
-    try
-    {
-        InputFile = fopen(InputFilePath.c_str(), "r");
-
-        fseek(InputFile, 0, SEEK_END);
-        int FileSize = ftell(InputFile);
-        FileBuffer->reserve(FileSize);
-        fseek(InputFile, 0, SEEK_SET);
-
-        int ret = fread(FileBuffer, FileSize + 1, 1, InputFile);
-
-    }
-    catch (int ExitCode)
-    {
-        printf("Error, failed to load input file...\n Exit code: %i\n", ExitCode);
-        exit(1);
-    }
-    return;
 }

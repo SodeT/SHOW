@@ -1,0 +1,10 @@
+PROGRAM = main.exe
+CXX = g++
+INCLUDE = -I headers/
+CFLAGS = -g
+CFLAGS += $(INCLUDE)
+!CXX = |> $(CXX) -c -o %o %f $(CFLAGS) |>
+!LD = |> $(CXX) -o %o %f $(CFLAGS) |>
+
+: foreach src/*.cpp |> !CXX |> obj/%B.o {OBJS}
+: {OBJS} |> !LD |> bin/$(PROGRAM)
