@@ -2,7 +2,7 @@
 #include <stdlib.h> // fopen
 #include <memory> // smart ptr
 
-char* ReadFile(std::string InputFilePath, FILE* InputFile)
+std::shared_ptr<char> ReadFile(std::string InputFilePath, FILE* InputFile)
 {
     try
     {
@@ -12,10 +12,10 @@ char* ReadFile(std::string InputFilePath, FILE* InputFile)
         int FileSize = ftell(InputFile);
         std::shared_ptr<char> FileBuffer = std::make_shared<char>(FileSize);
         fseek(InputFile, 0, SEEK_SET);
-
+        printf("Seg1\n");
         fread(FileBuffer.get(), FileSize + 1, 1, InputFile);
-
-        return FileBuffer.get();
+        printf("seg2\n");
+        return FileBuffer;
     }
     catch (int ExitCode)
     {

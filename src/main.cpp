@@ -36,7 +36,7 @@ int main(int Argc, char* Argv[])
     // InputText gets address out of bounds
     // Error most prob in fread but not sure.
     // Use GDB to find what line it gets out of bounds 
-    InputText = *ReadFile(InputFilePath, InputFile.get()); 
+    InputText = ReadFile(InputFilePath, InputFile.get()).get(); 
     printf("Hello World! 1\n");
     printf(InputText.c_str());
     
