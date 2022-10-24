@@ -1,25 +1,30 @@
-#include <string> // std::string
-#include <stdlib.h> // fopen
-#include <memory> // smart ptr
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
-std::shared_ptr<char> ReadFile(std::string InputFilePath, FILE* InputFile)
+std::string readFile(std::string path)
 {
-    try
-    {
-        InputFile = fopen(InputFilePath.c_str(), "r");
 
-        fseek(InputFile, 0, SEEK_END);
-        int FileSize = ftell(InputFile);
-        std::shared_ptr<char> FileBuffer = std::make_shared<char>(FileSize);
-        fseek(InputFile, 0, SEEK_SET);
-        printf("Seg1\n");
-        fread(FileBuffer.get(), FileSize + 1, 1, InputFile);
-        printf("seg2\n");
-        return FileBuffer;
+    std::string output;
+    std::string fileLine;
+    std::fstream fileStream;
+    fileStream.open(path, std::ios::in); 
+    if (fileStream.is_open())
+    { 
+        while (std::getline(fileStream, fileLine))
+        {  
+            output.append(fileLine + '\n');
+        }
+        fileStream.close();   
     }
-    catch (int ExitCode)
+    else 
     {
-        printf("Error, failed to load input file...\n Exit code: %i\n", ExitCode);
+        std::cout << path << std::endl;
+        printf("Error reading file, aborting...\n");
         exit(1);
     }
+    return output;
 }

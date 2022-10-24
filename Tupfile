@@ -1,7 +1,9 @@
 PROGRAM = main.exe
 CXX = g++
 INCLUDE = -I headers/
-CFLAGS = -g
+CFLAGS += -Wall  
+CFLAGS += -g -Wextra -Wpedantic -Werror
+CFLAGS += -std=c++17
 CFLAGS += $(INCLUDE)
 !CXX = |> $(CXX) -c -o %o %f $(CFLAGS) |>
 !LD = |> $(CXX) -o %o %f $(CFLAGS) |>

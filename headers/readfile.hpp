@@ -1,6 +1,6 @@
-#ifndef READFILE_HPP
-#define READFILE_HPP
+#ifndef READ_FILE_HPP
+#define READ_FILE_HPP
 
-std::shared_ptr<char> ReadFile(std::string InputFilePath, FILE* InputFile);
+std::string readFile(std::string path);
 
 #endif
