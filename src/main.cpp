@@ -6,9 +6,9 @@
 #include <numeric> //std::accumulate
 #include <iostream> // cout
 #include <stdio.h> // printf
+#include <limits.h> // INT_MAX
 
-#include "readFile.hpp"
-#include "parseWords.hpp"
+#include <utils.hpp>
 #include "../config.hpp"
 
 int main(int argc, char* argv[])
@@ -19,72 +19,99 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    std::vector<std::string> binPathSplit;
-    std::string fullString = argv[0];
-    std::string pathSegment;
-    while (true)
-    {
-        // ------------------------------------------------- error in this region of the code base (get dir of the executable)
-        std::cout << fullString << std::endl;
-        try
-        {
-            pathSegment = std::strtok((char*)fullString.c_str(), "\\");
-            binPathSplit.emplace_back(fullString);
-            fullString.erase(0, pathSegment.length());
-            std::cout << fullString << std::endl;
-        }
-        catch (const std::exception& e)
-        {
-            break;
-        }        
-    }
-    std::cout << fullString << std::endl;
-
-    std::string binPath = std::accumulate(binPathSplit.begin(), binPathSplit.end() - 1, std::string("/"));
-
-    std::cout << binPath << std::endl;
-
+    // get path of executable 
+    std::string aux(argv[0]);
+#if defined(_WIN32) || defined(WIN32) // for crosscompilation
+    int pos = aux.rfind('\\');
+#else
+    int pos = aux.rfind('/');
+#endif
+    std::string execPath = aux.substr(0,pos+1);
+    
+    // get input and output path
+    std::string inputFilePath = argv[1];
+    std::string outputFilePath = argv[2];
     std::string languageFilePath;
-    std::string inputFilePath;
-    std::string outputFilePath;
-
-    inputFilePath = argv[1];
-    outputFilePath = argv[2];
     if (argc >= 4)
-    {
-        languageFilePath = argv[3];
-    }
+        languageFilePath = execPath + argv[3];
     else 
-    {
-        languageFilePath = "English/";
-    }
+        languageFilePath = execPath + "English/";
 
     
+    // read and parse config file
+
+    // read input file
+    printf("d1\n");
     std::string inputFile = readFile(inputFilePath);
+    printf("d2\n");
 
     // read filter files
-    for (int i = 0; i < parseNum; i++)
+    for (int i = 0; i < filterNum; i++)
     {
         parseFiles[i] = readFile(languageFilePath + parseFilePaths[i]);
+        std::cout << parseFiles[i] << std::endl;
     }
+    printf("d3\n");
 
     // split input file into words
     std::vector<std::string> inputWords;
     std::string tempString;
     int wordNum = 0;
-    while (std::getline((std::istringstream)inputFile, tempString, ' ')) 
+    do
     {
+        std::getline((std::stringstream)inputFile, tempString, ' ');
         inputWords.push_back(tempString);
         wordNum++;
+        try
+        {
+            inputFile = inputFile.substr(tempString.length() + 1);
+        }
+        catch(const std::exception& e)
+        {
+            inputWords.push_back(inputFile);
+            break;
+        }
+        
+    } while (inputFile.length() > 1);
+
+    printf("d4\n");
+
+    // start a parseWords thread for each filter file
+    int* ret1 = (int*)malloc(wordNum);
+    int* ret2 = (int*)malloc(wordNum);
+
+    parseWords(parseFiles[0], inputWords.data(), wordNum, 1, ret1);
+    parseWords(parseFiles[1], inputWords.data(), wordNum, 2, ret2);
+
+    int* rets[2] = {ret1, ret2};
+
+    // merge return arrays 
+    int* retArr = (int*)malloc(wordNum);
+    for (int i = 0; i < wordNum; i++)
+    {
+        retArr[i] = INT_MAX;
+        for (int j = 0; j < filterNum; j++)
+        {
+            if (*rets[j] <= retArr[i] && *rets[j] != pt_unknown)
+            {
+                retArr[i] = *rets[j];
+            }
+        }
     }
 
-    // start a thread for each filter file
-    int ret[5];
-    std::string strVar[] = {"var", "har", "har", "var", "har"};
-    parseWords("var", strVar, 5, 1, ret);
-    //parseWords("var", strVar, 5, 1, ret);
 
-    std::cout << ret << std::endl;
+    for (int i = 0; i < wordNum; i++)
+    {
+        std::cout << retArr[i] << std::endl;
+    }
+
+    // copy xml template
+
+    // write changes to xml file
+
+    // compress to zip --> odt
+
+    // done
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 void parseWords(std::string parseFile, std::string inputWords[], int wordCount, int type, int output[])
 {

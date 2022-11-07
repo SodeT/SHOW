@@ -11,6 +11,7 @@ std::string readFile(std::string path)
     std::string output;
     std::string fileLine;
     std::fstream fileStream;
+    
     fileStream.open(path, std::ios::in); 
     if (fileStream.is_open())
     { 
