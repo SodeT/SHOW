@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     int pos = aux.rfind('/');
 #endif
     std::string execPath = aux.substr(0,pos+1);
-    
+    std::cout << execPath << aux << std::endl;
     // get input and output path
     std::string inputFilePath = argv[1];
     std::string outputFilePath = argv[2];
@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
     for (int i = 0; i < filterNum; i++)
     {
         parseFiles[i] = readFile(languageFilePath + parseFilePaths[i]);
-        std::cout << parseFiles[i] << std::endl;
     }
     printf("d3\n");
 
@@ -84,27 +83,34 @@ int main(int argc, char* argv[])
     parseWords(parseFiles[1], inputWords.data(), wordNum, 2, ret2);
 
     int* rets[2] = {ret1, ret2};
-
+    bool notSet = true;
     // merge return arrays 
     int* retArr = (int*)malloc(wordNum);
     for (int i = 0; i < wordNum; i++)
     {
+        notSet = true;
         retArr[i] = INT_MAX;
         for (int j = 0; j < filterNum; j++)
         {
-            if (*rets[j] <= retArr[i] && *rets[j] != pt_unknown)
+            if (rets[j][i] != pt_unknown)
             {
-                retArr[i] = *rets[j];
+                retArr[i] = rets[j][i];
+                notSet = false;
             }
+        }
+        if (notSet)
+        {
+            retArr[i] = pt_unknown;
         }
     }
 
 
+    printf("d5\n");
     for (int i = 0; i < wordNum; i++)
     {
         std::cout << retArr[i] << std::endl;
     }
-
+    printf("d6\n");
     // copy xml template
 
     // write changes to xml file

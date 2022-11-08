@@ -1,10 +1,10 @@
 PROGRAM = main.exe
-CXX = g++
-INCLUDE = -I headers/
-CFLAGS += -Wall  
-CFLAGS += -g -Wextra -Wpedantic
-CFLAGS += -std=c++17
-CFLAGS += $(INCLUDE)
+CXX = clang
+
+CFLAGS = -I headers/  
+CFLAGS += -O3 -Wall -Wextra -Wpedantic
+CFLAGS += -std=c++17 -target x86_64-pc-windows-gnu -fuse-ld=ld
+
 !CXX = |> $(CXX) -c -o %o %f $(CFLAGS) |>
 !LD = |> $(CXX) -o %o %f $(CFLAGS) |>
 
