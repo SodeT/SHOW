@@ -1,3 +1,5 @@
+// This is file is used for special settings and the project must be recompiled for the changes to take effect.
+
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 

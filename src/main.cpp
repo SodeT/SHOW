@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     int pos = aux.rfind('/');
 #endif
     std::string execPath = aux.substr(0,pos+1);
-    std::cout << execPath << aux << std::endl;
+
     // get input and output path
     std::string inputFilePath = argv[1];
     std::string outputFilePath = argv[2];
@@ -41,16 +41,16 @@ int main(int argc, char* argv[])
     // read and parse config file
 
     // read input file
-    printf("d1\n");
+
     std::string inputFile = readFile(inputFilePath);
-    printf("d2\n");
+
 
     // read filter files
     for (int i = 0; i < filterNum; i++)
     {
         parseFiles[i] = readFile(languageFilePath + parseFilePaths[i]);
     }
-    printf("d3\n");
+
 
     // split input file into words
     std::vector<std::string> inputWords;
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
         
     } while (inputFile.length() > 1);
 
-    printf("d4\n");
+
 
     // start a parseWords thread for each filter file
     int* ret1 = (int*)malloc(wordNum);
@@ -105,12 +105,16 @@ int main(int argc, char* argv[])
     }
 
 
-    printf("d5\n");
+
     for (int i = 0; i < wordNum; i++)
     {
         std::cout << retArr[i] << std::endl;
     }
-    printf("d6\n");
+
+    free(ret1);
+    free(ret2);
+    free(retArr);
+
     // copy xml template
 
     // write changes to xml file
