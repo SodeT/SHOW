@@ -3,9 +3,9 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-const int filterNum = 2;
+const int filterNum = 16;
 std::string parseFiles[filterNum];
-std::string parseFilePaths[filterNum] = {"nouns.txt", "adjectives.txt"};
-enum phraseTypes {pt_unknown = 0, pt_quote, pt_number, pt_nouns, pt_adjectives}; 
+std::string parseFilePaths[filterNum];
+enum filterType {ft_unknown = 0, ft_quote, ft_number}; 
 
 #endif

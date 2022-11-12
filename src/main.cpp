@@ -7,8 +7,16 @@
 #include <iostream> // cout
 #include <stdio.h> // printf
 #include <limits.h> // INT_MAX
+#include <regex> // regex_replace
+
+#if defined(_WIN32) || defined(WIN32) // windows and linux specific filesystem headers
+
+#else
+#include <filesystem>
+#endif
 
 #include <utils.hpp>
+#include <filterConfig.hpp>
 #include "../config.hpp"
 
 int main(int argc, char* argv[])
@@ -41,7 +49,6 @@ int main(int argc, char* argv[])
     // read and parse config file
 
     // read input file
-
     std::string inputFile = readFile(inputFilePath);
 
 
@@ -82,9 +89,9 @@ int main(int argc, char* argv[])
     parseWords(parseFiles[0], inputWords.data(), wordNum, 1, ret1);
     parseWords(parseFiles[1], inputWords.data(), wordNum, 2, ret2);
 
+    // merge return arrays 
     int* rets[2] = {ret1, ret2};
     bool notSet = true;
-    // merge return arrays 
     int* retArr = (int*)malloc(wordNum);
     for (int i = 0; i < wordNum; i++)
     {
@@ -92,7 +99,7 @@ int main(int argc, char* argv[])
         retArr[i] = INT_MAX;
         for (int j = 0; j < filterNum; j++)
         {
-            if (rets[j][i] != pt_unknown)
+            if (rets[j][i] != ft_unknown)
             {
                 retArr[i] = rets[j][i];
                 notSet = false;
@@ -100,7 +107,7 @@ int main(int argc, char* argv[])
         }
         if (notSet)
         {
-            retArr[i] = pt_unknown;
+            retArr[i] = ft_unknown;
         }
     }
 

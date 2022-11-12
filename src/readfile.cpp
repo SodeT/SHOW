@@ -23,8 +23,8 @@ std::string readFile(std::string path)
     }
     else 
     {
-        std::cout << path << std::endl;
-        printf("Error reading file, aborting...\n");
+        printf("Error reading file: \"%s\", aborting...\n", path.c_str());
+        
         exit(1);
     }
     return output;

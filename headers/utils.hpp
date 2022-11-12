@@ -1,8 +1,9 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <filterConfig.hpp>
+
 void parseWords(std::string parseFile, std::string inputWords[], int wordCount, int type, int output[]);
 std::string readFile(std::string path);
-//int log(std::string str, bool verbose); 
-
+std::vector<filterConfig> readConfig(std::string inputFile, std::string* parseFilePaths);
 #endif
