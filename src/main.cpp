@@ -1,6 +1,5 @@
 #include <string> // string parsing
 #include <vector> // vector
-#include <thread> // multithreading
 #include <cstring> // strtok
 #include <sstream> // istringstream
 #include <numeric> //std::accumulate
@@ -9,15 +8,19 @@
 #include <limits.h> // INT_MAX
 #include <regex> // regex_replace
 
+#include <boost/thread.hpp> // multithreading
+
 #if defined(_WIN32) || defined(WIN32) // windows and linux specific filesystem headers
 
 #else
-#include <filesystem>
+#include <boost/filesystem.hpp>
 #endif
 
 #include <utils.hpp>
-#include <filterConfig.hpp>
-#include "../config.hpp"
+#include <structs.hpp>
+
+
+enum filterType {ft_unknown = 0, ft_quote, ft_number}; // what is the usecase???
 
 int main(int argc, char* argv[])
 {
@@ -40,6 +43,7 @@ int main(int argc, char* argv[])
     std::string inputFilePath = argv[1];
     std::string outputFilePath = argv[2];
     std::string languageFilePath;
+
     if (argc >= 4)
         languageFilePath = execPath + argv[3];
     else 
@@ -47,27 +51,29 @@ int main(int argc, char* argv[])
 
     
     // read and parse config file
+    std::vector<filter> filters;
+    parseConfig(readFile(languageFilePath + "config.conf"), filters);
 
     // read input file
     std::string inputFile = readFile(inputFilePath);
 
 
     // read filter files
-    for (int i = 0; i < filterNum; i++)
+    for (int i = 0; i < (int)filters.size(); i++)
     {
-        parseFiles[i] = readFile(languageFilePath + parseFilePaths[i]);
+        filters[i].content = readFile(languageFilePath + filters[i].fileName);
     }
 
 
     // split input file into words
     std::vector<std::string> inputWords;
     std::string tempString;
-    int wordNum = 0;
+    int wordCount = 0;
     do
     {
         std::getline((std::stringstream)inputFile, tempString, ' ');
         inputWords.push_back(tempString);
-        wordNum++;
+        wordCount++;
         try
         {
             inputFile = inputFile.substr(tempString.length() + 1);
@@ -83,44 +89,35 @@ int main(int argc, char* argv[])
 
 
     // start a parseWords thread for each filter file
-    int* ret1 = (int*)malloc(wordNum);
-    int* ret2 = (int*)malloc(wordNum);
+    // reserve size
+    std::vector<boost::thread> filterThreads;
+    std::vector<std::vector<int>> filterOutput;
 
-    parseWords(parseFiles[0], inputWords.data(), wordNum, 1, ret1);
-    parseWords(parseFiles[1], inputWords.data(), wordNum, 2, ret2);
+
+    for (int i = 0; i < (int)filters.size(); i++)
+    {
+        filterThreads.emplace_back(parseWords, filters[i].content, inputWords.data(), wordCount, filters[i].type, filterOutput[i]);
+    }
+
+    for (int i = 0; i < (int)filters.size(); i++)
+    {
+        filterThreads[i].join();
+    }
 
     // merge return arrays 
-    int* rets[2] = {ret1, ret2};
-    bool notSet = true;
-    int* retArr = (int*)malloc(wordNum);
-    for (int i = 0; i < wordNum; i++)
+    std::vector<int> returnArray;
+    for (int i = 0; i < wordCount; i++)
     {
-        notSet = true;
-        retArr[i] = INT_MAX;
-        for (int j = 0; j < filterNum; j++)
+        for (int j = 0; j < (int)filters.size(); j++)
         {
-            if (rets[j][i] != ft_unknown)
-            {
-                retArr[i] = rets[j][i];
-                notSet = false;
-            }
-        }
-        if (notSet)
-        {
-            retArr[i] = ft_unknown;
+            returnArray.push_back(mergeArray())
         }
     }
 
-
-
-    for (int i = 0; i < wordNum; i++)
+    for (int i = 0; i < wordCount; i++)
     {
         std::cout << retArr[i] << std::endl;
     }
-
-    free(ret1);
-    free(ret2);
-    free(retArr);
 
     // copy xml template
 

@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 
-void parseWords(std::string parseFile, std::string inputWords[], int wordCount, int type, int output[])
+void parseWords(std::string parseFile, std::string inputWords[], int wordCount, int type, std::vector<int> output)
 {
     for (int i = 0; i < wordCount; i++)
     {
