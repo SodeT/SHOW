@@ -71,5 +71,6 @@
         "numeric": "cpp",
         "bitset": "cpp",
         "deque": "cpp"
-    }
+    },
+    "git.ignoreLimitWarning": true
 }

@@ -7,7 +7,7 @@ void parseWords(std::string parseFile, std::string inputWords[], int wordCount, 
 
 std::string readFile(std::string path);
 
-void parseConfig(std::string inputFile, std::vector<filter> filters);
+void parseConfig(std::string inputFile, std::vector<filter>* filters);
 
 int mergeArray(std::vector<int> options);
 

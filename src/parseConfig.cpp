@@ -4,7 +4,7 @@
 
 #include <structs.hpp> // filterConfig and filterFile structs
 
-void parseConfig(std::string inputFile, std::vector<filter> filters)
+void parseConfig(std::string inputFile, std::vector<filter>* filters)
 {
     std::string currentLine;
     int currentType = 0;
@@ -53,7 +53,7 @@ void parseConfig(std::string inputFile, std::vector<filter> filters)
 
         if (currentoption >= optionsCount)
         {
-            filters.emplace_back(options[0], options[1], options[2], options[3], options[4], filterName, currentType);
+            filters->emplace_back(options[0], options[1], options[2], options[3], options[4], filterName, currentType);
             currentoption = 0;
             filterName = "";
         }

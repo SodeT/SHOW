@@ -8,13 +8,8 @@
 #include <limits.h> // INT_MAX
 #include <regex> // regex_replace
 
-#include <boost/thread.hpp> // multithreading
-
-#if defined(_WIN32) || defined(WIN32) // windows and linux specific filesystem headers
-
-#else
-#include <boost/filesystem.hpp>
-#endif
+#include <thread> // multithreading
+#include <filesystem> // filesystem
 
 #include <utils.hpp>
 #include <structs.hpp>
@@ -52,7 +47,7 @@ int main(int argc, char* argv[])
     
     // read and parse config file
     std::vector<filter> filters;
-    parseConfig(readFile(languageFilePath + "config.conf"), filters);
+    parseConfig(readFile(languageFilePath + "config.conf"), &filters);
 
     // read input file
     std::string inputFile = readFile(inputFilePath);
@@ -87,12 +82,10 @@ int main(int argc, char* argv[])
     } while (inputFile.length() > 1);
 
 
-
     // start a parseWords thread for each filter file
     // reserve size
-    std::vector<boost::thread> filterThreads;
+    std::vector<std::thread> filterThreads;
     std::vector<std::vector<int>> filterOutput;
-
 
     for (int i = 0; i < (int)filters.size(); i++)
     {
@@ -106,17 +99,20 @@ int main(int argc, char* argv[])
 
     // merge return arrays 
     std::vector<int> returnArray;
+    std::vector<int> currentWord;
     for (int i = 0; i < wordCount; i++)
     {
         for (int j = 0; j < (int)filters.size(); j++)
         {
-            returnArray.push_back(mergeArray())
+            currentWord.push_back(filterOutput[i][j * wordCount]);
         }
+        returnArray.push_back(mergeArray(currentWord));
+        currentWord.clear();
     }
 
     for (int i = 0; i < wordCount; i++)
     {
-        std::cout << retArr[i] << std::endl;
+        std::cout << returnArray[i] << std::endl;
     }
 
     // copy xml template

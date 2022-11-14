@@ -1,5 +1,6 @@
 obj/
 *.o
-*.exe
-.tup
-.vscode
+SHOW.exe
+SHOW
+.tup/
+.vscode/

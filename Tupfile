@@ -3,10 +3,10 @@
 # Office
 # Word
 
-PROGRAM = SHOW
-CXX = g++
+PROGRAM = SHOW.exe
+CXX = clang++
 
-CFLAGS = -I headers/
+CFLAGS = -I headers/ --target=x86_64-pc-windows-gnu
 CFLAGS += -g -Wall -Wextra -Wpedantic
 CFLAGS += -std=c++17 
 
