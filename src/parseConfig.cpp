@@ -1,25 +1,30 @@
 #include <vector> // vectors
 #include <string> // strings
 #include <sstream> // istringstream
-
+#include <iostream> // cout
 #include <structs.hpp> // filterConfig and filterFile structs
 
-void parseConfig(std::string inputFile, std::vector<filter>* filters)
+#include <utils.hpp>
+
+void parseConfig(std::string inputFile, std::vector<filter>& filters)
 {
     std::string currentLine;
     int currentType = 0;
 
-    std::string filterName;
+    std::string filterName = "";
     int filterCount = 0;
 
-    const int optionsCount = 6;
+    const int optionsCount = 5;
     std::string options[optionsCount];
-    int currentoption = 0;
+    int currentOption = 0;
+    
 
     do
     {
-        std::getline((std::stringstream)inputFile, currentLine, '\n');
+        currentLine = inputFile.substr(0, inputFile.find('\n') +1);
         inputFile = inputFile.substr(currentLine.length()); // remove the line we just read
+
+        currentLine = chomp(currentLine, forbiddenChars);
 
         if (currentLine.find("all:") != std::string::npos)
         {
@@ -34,31 +39,33 @@ void parseConfig(std::string inputFile, std::vector<filter>* filters)
         {
             currentType++;
             continue;
-        }
+        } 
         else if (currentLine.find("filter:") != std::string::npos)
         {
             currentType++;
-            filterName = currentLine.substr(7); // "filter:".length = 7
+            filterName = currentLine.substr(7); // "filter: ".length = 8
             filterCount++;
             continue;
         }
 
-        if (currentLine == "")
+        if (currentLine == "") 
         {
+            std::cout << "Empty\n";
             continue;
         }
 
-        options[currentoption] = currentLine.substr(currentLine.find(": "));
-        currentoption++;
+        std::cout << currentLine << "\n";
+        options[currentOption] = currentLine.substr(currentLine.find(":"));
+        currentOption++;
 
-        if (currentoption >= optionsCount)
+
+        if (currentOption >= optionsCount)
         {
-            filters->emplace_back(options[0], options[1], options[2], options[3], options[4], filterName, currentType);
-            currentoption = 0;
+            filters.emplace_back(options[0], options[1], options[2], options[3], options[4], filterName, currentType);
+            currentOption = 0;
             filterName = "";
         }
-        
     } while (inputFile.length() > 0);
-
+    
     return;
 }

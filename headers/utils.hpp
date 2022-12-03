@@ -3,12 +3,11 @@
 
 #include <structs.hpp>
 
-void parseWords(std::string parseFile, std::string inputWords[], int wordCount, int type, std::vector<int> output);
+const std::string forbiddenChars = " \n\r";
 
+std::vector<int> parseWords(std::vector<filter> filters, std::vector<std::string> inputWords);
 std::string readFile(std::string path);
-
-void parseConfig(std::string inputFile, std::vector<filter>* filters);
-
-int mergeArray(std::vector<int> options);
+void parseConfig(std::string inputFile, std::vector<filter>& filters);
+std::string chomp(std::string input, std::string forbiddenChars);
 
 #endif

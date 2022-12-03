@@ -7,7 +7,7 @@ PROGRAM = SHOW.exe
 CXX = clang++
 
 CFLAGS = -I headers/ --target=x86_64-pc-windows-gnu
-CFLAGS += -g -Wall -Wextra -Wpedantic
+CFLAGS += -ggdb -Wall -Wextra -Wpedantic
 CFLAGS += -std=c++17 
 
 !CXX = |> $(CXX) -c -o %o %f $(CFLAGS) |>

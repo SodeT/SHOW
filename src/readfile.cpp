@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <utils.hpp>
 
 std::string readFile(std::string path)
 {
 
+    path = chomp(path, forbiddenChars);
     std::string output;
     std::string fileLine;
     std::fstream fileStream;
@@ -20,6 +22,7 @@ std::string readFile(std::string path)
             output.append(fileLine + '\n');
         }
         fileStream.close();   
+        printf("%S\n", output.c_str());
     }
     else 
     {

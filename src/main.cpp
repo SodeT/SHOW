@@ -8,12 +8,19 @@
 #include <limits.h> // INT_MAX
 #include <regex> // regex_replace
 
+#include <utility>
+#include <chrono>
+
 #include <thread> // multithreading
 #include <filesystem> // filesystem
 
 #include <utils.hpp>
 #include <structs.hpp>
 
+void log(const char* msg)
+{
+    printf("%s\n", msg);
+}
 
 enum filterType {ft_unknown = 0, ft_quote, ft_number}; // what is the usecase???
 
@@ -42,20 +49,25 @@ int main(int argc, char* argv[])
     if (argc >= 4)
         languageFilePath = execPath + argv[3];
     else 
-        languageFilePath = execPath + "English/";
+        languageFilePath = execPath + "English\\";
 
     
     // read and parse config file
     std::vector<filter> filters;
-    parseConfig(readFile(languageFilePath + "config.conf"), &filters);
-
+    printf("read\n");
+    parseConfig(readFile(languageFilePath + "config.conf"), filters);
+    printf("read2\n");
     // read input file
     std::string inputFile = readFile(inputFilePath);
-
+    printf("read3\n");
 
     // read filter files
-    for (int i = 0; i < (int)filters.size(); i++)
+    for (size_t i = 0; i < filters.size(); i++)
     {
+        if (filters[i].fileName == "")
+        {
+            continue;
+        }
         filters[i].content = readFile(languageFilePath + filters[i].fileName);
     }
 
@@ -81,38 +93,18 @@ int main(int argc, char* argv[])
         
     } while (inputFile.length() > 1);
 
-
     // start a parseWords thread for each filter file
-    // reserve size
-    std::vector<std::thread> filterThreads;
-    std::vector<std::vector<int>> filterOutput;
-
-    for (int i = 0; i < (int)filters.size(); i++)
+    std::vector<int> filterOutput;
+    for (size_t i = 0; i < filters.size(); i++)
     {
-        filterThreads.emplace_back(parseWords, filters[i].content, inputWords.data(), wordCount, filters[i].type, filterOutput[i]);
+        filterOutput = parseWords(filters, inputWords);
     }
 
-    for (int i = 0; i < (int)filters.size(); i++)
-    {
-        filterThreads[i].join();
-    }
 
-    // merge return arrays 
-    std::vector<int> returnArray;
-    std::vector<int> currentWord;
-    for (int i = 0; i < wordCount; i++)
+    printf("filterOutput: \n");
+    for (size_t i = 0; i < filterOutput.size(); i++)
     {
-        for (int j = 0; j < (int)filters.size(); j++)
-        {
-            currentWord.push_back(filterOutput[i][j * wordCount]);
-        }
-        returnArray.push_back(mergeArray(currentWord));
-        currentWord.clear();
-    }
-
-    for (int i = 0; i < wordCount; i++)
-    {
-        std::cout << returnArray[i] << std::endl;
+        std::cout << filterOutput[i] << std::endl;   
     }
 
     // copy xml template
