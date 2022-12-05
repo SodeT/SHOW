@@ -50,11 +50,9 @@ void parseConfig(std::string inputFile, std::vector<filter>& filters)
 
         if (currentLine == "") 
         {
-            std::cout << "Empty\n";
             continue;
         }
 
-        std::cout << currentLine << "\n";
         options[currentOption] = currentLine.substr(currentLine.find(":"));
         currentOption++;
 

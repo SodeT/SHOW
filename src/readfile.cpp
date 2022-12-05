@@ -21,8 +21,7 @@ std::string readFile(std::string path)
         {  
             output.append(fileLine + '\n');
         }
-        fileStream.close();   
-        printf("%S\n", output.c_str());
+        fileStream.close();
     }
     else 
     {

@@ -5,7 +5,6 @@
 
 std::vector<int> parseWords(std::vector<filter> filters, std::vector<std::string> inputWords)  //, std::vector<int>& output)
 {
-    std::cout << "parseWords" << std::endl;
     std::vector<int> output;
     bool assigned = false;
     for (size_t i = 0; i < inputWords.size(); i++)

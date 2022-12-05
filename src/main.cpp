@@ -17,10 +17,6 @@
 #include <utils.hpp>
 #include <structs.hpp>
 
-void log(const char* msg)
-{
-    printf("%s\n", msg);
-}
 
 enum filterType {ft_unknown = 0, ft_quote, ft_number}; // what is the usecase???
 
@@ -54,12 +50,11 @@ int main(int argc, char* argv[])
     
     // read and parse config file
     std::vector<filter> filters;
-    printf("read\n");
     parseConfig(readFile(languageFilePath + "config.conf"), filters);
-    printf("read2\n");
+    
     // read input file
     std::string inputFile = readFile(inputFilePath);
-    printf("read3\n");
+    
 
     // read filter files
     for (size_t i = 0; i < filters.size(); i++)
@@ -100,16 +95,27 @@ int main(int argc, char* argv[])
         filterOutput = parseWords(filters, inputWords);
     }
 
+    // copy xml template
+    //std::filesystem::copy(execPath + "template/", outputFilePath);
+    std::string xmlContent = readFile(execPath + "template/content.xml");
 
-    printf("filterOutput: \n");
-    for (size_t i = 0; i < filterOutput.size(); i++)
+    std::vector<std::string> xmlStyles;
+    for (size_t i = 0; i < filters.size(); i++)
     {
-        std::cout << filterOutput[i] << std::endl;   
+        xmlStyles.push_back(writeStyle(filters[i]));
+        std::cout << xmlStyles[i] << "\n";
     }
 
-    // copy xml template
+    printf("-----------------\n");
+    std::vector<std::string> xmlText;
+    for (size_t i = 0; i < inputWords.size(); i++)
+    {
+        xmlText.push_back(writeWords(inputWords[i], filterOutput[i]));
+        std::cout << xmlText[i] << "\n";
+    }
 
     // write changes to xml file
+
 
     // compress to zip --> odt
 
