@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     if (argc >= 4)
         languageFilePath = execPath + argv[3];
     else 
-        languageFilePath = execPath + "English\\";
+        languageFilePath = execPath + "English/";
 
     
     // read and parse config file

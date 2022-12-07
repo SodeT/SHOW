@@ -2,5 +2,6 @@ obj/
 *.o
 SHOW.exe
 SHOW
+.tup/db
 .tup/
 .vscode/

@@ -4,9 +4,9 @@
 # Word
 
 PROGRAM = SHOW.exe
-CXX = clang++
+CXX = g++
 
-CFLAGS = -I headers/ --target=x86_64-pc-windows-gnu
+CFLAGS = -I headers/
 CFLAGS += -ggdb -Wall -Wextra -Wpedantic
 CFLAGS += -std=c++17 
 
