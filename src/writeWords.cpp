@@ -4,9 +4,9 @@
 
 std::string writeWords(std::string word, int type)
 {
-    std::string wordTemplate = "<text:span text:style-name=\"T-STYLE-\">-WORD-<text:s /></text:span>";
+    std::string wordTemplate = "<p class=\"T-TYPE-\">-WORD- </p>";
 
-    wordTemplate = patternReplace(std::to_string(type), "-STYLE-", wordTemplate);
+    wordTemplate = patternReplace(std::to_string(type), "-TYPE-", wordTemplate);
     wordTemplate = patternReplace(word, "-WORD-", wordTemplate);
 
     return wordTemplate;

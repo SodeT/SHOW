@@ -24,7 +24,7 @@ void parseConfig(std::string inputFile, std::vector<filter>& filters)
         currentLine = inputFile.substr(0, inputFile.find('\n') +1);
         inputFile = inputFile.substr(currentLine.length()); // remove the line we just read
 
-        currentLine = chomp(currentLine, forbiddenChars);
+        currentLine = chomp(currentLine, escChars);
 
         if (currentLine.find("all:") != std::string::npos)
         {
@@ -48,12 +48,12 @@ void parseConfig(std::string inputFile, std::vector<filter>& filters)
             continue;
         }
 
-        if (currentLine == "") 
+        if (chomp(currentLine, escChars) == "") 
         {
             continue;
         }
 
-        options[currentOption] = currentLine.substr(currentLine.find(":"));
+        options[currentOption] = currentLine.substr(currentLine.find(":") +1);
         currentOption++;
 
 

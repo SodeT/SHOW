@@ -9,7 +9,7 @@
 std::string readFile(std::string path)
 {
 
-    path = chomp(path, forbiddenChars);
+    path = chomp(path, escChars);
     std::string output;
     std::string fileLine;
     std::fstream fileStream;

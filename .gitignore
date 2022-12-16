@@ -5,3 +5,4 @@ SHOW
 .tup/db
 .tup/
 .vscode/
+bin/

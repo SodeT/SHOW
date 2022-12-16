@@ -7,6 +7,7 @@
 #include <stdio.h> // printf
 #include <limits.h> // INT_MAX
 #include <regex> // regex_replace
+#include <algorithm> // join
 
 #include <utility>
 #include <chrono>
@@ -63,61 +64,44 @@ int main(int argc, char* argv[])
         {
             continue;
         }
-        filters[i].content = readFile(languageFilePath + filters[i].fileName);
+        filters[i].content = splitString(readFile(languageFilePath + filters[i].fileName));
     }
 
 
     // split input file into words
-    std::vector<std::string> inputWords;
-    std::string tempString;
-    int wordCount = 0;
-    do
-    {
-        std::getline((std::stringstream)inputFile, tempString, ' ');
-        inputWords.push_back(tempString);
-        wordCount++;
-        try
-        {
-            inputFile = inputFile.substr(tempString.length() + 1);
-        }
-        catch(const std::exception& e)
-        {
-            inputWords.push_back(inputFile);
-            break;
-        }
-        
-    } while (inputFile.length() > 1);
-
+    std::vector<std::string> inputWords = splitString(inputFile);
+    
     // start a parseWords thread for each filter file
     std::vector<int> filterOutput;
-    for (size_t i = 0; i < filters.size(); i++)
+    filterOutput = parseWords(filters, inputWords);
+    
+    /*for (size_t i = 0; i < filters.size(); i++)
     {
-        filterOutput = parseWords(filters, inputWords);
-    }
+    }*/
 
     // copy xml template
-    //std::filesystem::copy(execPath + "template/", outputFilePath);
-    std::string xmlContent = readFile(execPath + "template/content.xml");
+    std::string content = readFile(execPath + "template/template.html");
 
-    std::vector<std::string> xmlStyles;
+    std::vector<std::string> styleVec;
     for (size_t i = 0; i < filters.size(); i++)
     {
-        xmlStyles.push_back(writeStyle(filters[i]));
-        std::cout << xmlStyles[i] << "\n";
+        styleVec.push_back(writeStyle(filters[i]));
     }
+    std::string style = joinContent(styleVec, "\n");
 
-    printf("-----------------\n");
-    std::vector<std::string> xmlText;
+    std::vector<std::string> textVec;
     for (size_t i = 0; i < inputWords.size(); i++)
     {
-        xmlText.push_back(writeWords(inputWords[i], filterOutput[i]));
-        std::cout << xmlText[i] << "\n";
+        textVec.push_back(writeWords(inputWords[i], filterOutput[i]));
     }
+    std::string text = joinContent(textVec, "\n");
 
-    // write changes to xml file
+    content = patternReplace(style, "-STYLE-", content);
+    content = patternReplace(text, "-TEXT-", content);
 
+    // write changes to html file
+    writeFile(outputFilePath, content);
 
-    // compress to zip --> odt
 
     // done
 

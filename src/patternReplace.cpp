@@ -1,9 +1,8 @@
 #include <string> 
 
-std::string patternReplace(std::string insert, std::string symbol, std::string styleTemplate)
+std::string patternReplace(std::string insert, std::string symbol, std::string str)
 {
-    size_t pos = styleTemplate.find(symbol);
-    styleTemplate.replace(pos, symbol.length(), insert);
-    return styleTemplate;
-
+    size_t pos = str.find(symbol);
+    str.replace(pos, symbol.length(), insert);
+    return str;
 }

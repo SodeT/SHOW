@@ -13,7 +13,7 @@ struct filter
     std::string weight;
 
     std::string fileName;
-    std::string content;
+    std::vector<std::string> content;
     
     int type;
 
