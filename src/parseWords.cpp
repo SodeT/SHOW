@@ -23,7 +23,8 @@ std::vector<int> parseWords(std::vector<filter> filters, std::vector<std::string
         }
         else if (word.find("\"") != std::string::npos)
         {
-            quote = !quote;
+            if (word.find("\"") == word.rfind("\""))
+                quote = !quote;
             output.push_back(1);
             continue;
         }

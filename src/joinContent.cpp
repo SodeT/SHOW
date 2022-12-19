@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <utils.hpp>
 
 std::string joinContent(std::vector<std::string> content, std::string symbol)
 {

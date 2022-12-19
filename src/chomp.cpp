@@ -1,4 +1,5 @@
 #include <string>
+#include <utils.hpp> 
 
 std::string chomp(std::string input, std::string forbiddenChars)
 {

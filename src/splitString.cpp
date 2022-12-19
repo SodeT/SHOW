@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <utils.hpp>
 
 std::vector<std::string> splitString(std::string input)
 {

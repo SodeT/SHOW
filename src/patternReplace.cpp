@@ -1,4 +1,5 @@
 #include <string> 
+#include <utils.hpp>
 
 std::string patternReplace(std::string insert, std::string symbol, std::string str)
 {

@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
     // get path of executable 
     std::string aux(argv[0]);
 #if defined(_WIN32) || defined(WIN32) // for crosscompilation
-    int pos = aux.rfind('\\');
+    size_t pos = aux.rfind('\\');
 #else
-    int pos = aux.rfind('/');
+    size_t pos = aux.rfind('/');
 #endif
     std::string execPath = aux.substr(0,pos+1);
 
@@ -48,12 +48,11 @@ int main(int argc, char* argv[])
     else 
         languageFilePath = execPath + "English/";
 
-    
     // read and parse config file
     std::cout << "Reading config...\n";
     std::vector<filter> filters;
     parseConfig(readFile(languageFilePath + "config.conf"), filters);
-    
+
     // read input file
     std::cout << "Reading input...\n";
     std::string inputFile = readFile(inputFilePath);
@@ -101,7 +100,7 @@ int main(int argc, char* argv[])
     content = patternReplace(text, "-TEXT-", content);
 
     // write changes to html file
-    std::cout << "Writing outpu...\n";
+    std::cout << "Writing output...\n";
     writeFile(outputFilePath, content);
 
 

@@ -1,4 +1,5 @@
 #include <string>
+#include <utils.hpp>
 
 std::string downcase(std::string str)
 {
