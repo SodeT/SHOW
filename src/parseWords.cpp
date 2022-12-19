@@ -38,16 +38,13 @@ std::vector<int> parseWords(std::vector<filter> filters, std::vector<std::string
         assigned = false;
         for (size_t j = 0; j < filters.size(); j++)
         {
-            for (size_t h = 0; h < filters[j].content.size(); h++)
+            std::vector<std::string>::iterator strIterator;
+            strIterator = std::find(filters[j].content.begin(), filters[j].content.end(), word);
+            if (strIterator != filters[j].content.end())
             {
-                std::vector<std::string>::iterator strIterator;
-                strIterator = std::find(filters[j].content.begin(), filters[j].content.end(), word);
-                if (strIterator != filters[j].content.end())
-                {
-                    output.push_back(filters[j].type);
-                    assigned = true;
-                    goto end;
-                }
+                output.push_back(filters[j].type);
+                assigned = true;
+                goto end;
             }
         }
         end:

@@ -50,14 +50,17 @@ int main(int argc, char* argv[])
 
     
     // read and parse config file
+    std::cout << "Reading config...\n";
     std::vector<filter> filters;
     parseConfig(readFile(languageFilePath + "config.conf"), filters);
     
     // read input file
+    std::cout << "Reading input...\n";
     std::string inputFile = readFile(inputFilePath);
     
 
     // read filter files
+    std::cout << "Parsing filters...\n";
     for (size_t i = 0; i < filters.size(); i++)
     {
         if (filters[i].fileName == "")
@@ -69,17 +72,15 @@ int main(int argc, char* argv[])
 
 
     // split input file into words
+    std::cout << "Parsing words...\n";
     std::vector<std::string> inputWords = splitString(inputFile);
     
     // start a parseWords thread for each filter file
     std::vector<int> filterOutput;
     filterOutput = parseWords(filters, inputWords);
-    
-    /*for (size_t i = 0; i < filters.size(); i++)
-    {
-    }*/
 
     // copy xml template
+    std::cout << "Generating html...\n";
     std::string content = readFile(execPath + "template/template.html");
 
     std::vector<std::string> styleVec;
@@ -100,10 +101,12 @@ int main(int argc, char* argv[])
     content = patternReplace(text, "-TEXT-", content);
 
     // write changes to html file
+    std::cout << "Writing outpu...\n";
     writeFile(outputFilePath, content);
 
 
     // done
+    std::cout << "Done...\n";
 
     return 0;
 }
