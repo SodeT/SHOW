@@ -5,11 +5,11 @@
 # AKA SHOW
 
 PROGRAM = SHOW.exe
-CXX = clang++
+CXX = g++
 
 CFLAGS = -I headers/
-CFLAGS += -Wall -Wextra -Wpedantic
-CFLAGS += -std=c++17 --target=x86_64-pc-windows-gnu
+CFLAGS += -Wall -Wextra -Wpedantic -O3
+CFLAGS += -std=c++17
 
 !CXX = |> $(CXX) -c -o %o %f $(CFLAGS) |>
 !LD = |> $(CXX) -o %o %f $(CFLAGS) |>

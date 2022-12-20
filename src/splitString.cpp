@@ -7,7 +7,7 @@ std::vector<std::string> splitString(std::string input)
 {
     std::vector<std::string> words;
     std::string word;
-    long long unsigned int spaceIndex; // bruh fr
+    size_t spaceIndex;
     do
     {
         spaceIndex = input.find(" ");

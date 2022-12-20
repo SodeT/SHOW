@@ -12,14 +12,11 @@
 #include <utility>
 #include <chrono>
 
-#include <thread> // multithreading
 #include <filesystem> // filesystem
 
 #include <utils.hpp>
 #include <structs.hpp>
 
-
-enum filterType {ft_unknown = 0, ft_quote, ft_number}; // what is the usecase???
 
 int main(int argc, char* argv[])
 {
@@ -30,13 +27,13 @@ int main(int argc, char* argv[])
     }
 
     // get path of executable 
-    std::string aux(argv[0]);
+    std::string argZero = argv[0];
 #if defined(_WIN32) || defined(WIN32) // for crosscompilation
-    size_t pos = aux.rfind('\\');
+    size_t pos = argZero.rfind('\\');
 #else
-    size_t pos = aux.rfind('/');
+    size_t pos = argZero.rfind('/');
 #endif
-    std::string execPath = aux.substr(0,pos+1);
+    std::string execPath = argZero.substr(0,pos+1);
 
     // get input and output path
     std::string inputFilePath = argv[1];
@@ -78,7 +75,7 @@ int main(int argc, char* argv[])
     std::vector<int> filterOutput;
     filterOutput = parseWords(filters, inputWords);
 
-    // copy xml template
+    // copy html template
     std::cout << "Generating html...\n";
     std::string content = readFile(execPath + "template/template.html");
 
